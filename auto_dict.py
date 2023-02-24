@@ -11,6 +11,7 @@ class auto_dict():
         self.dictname, self.dictroot = self.get_dict(WebDict_File)
         self.result_file = Path(f"{text_file.stem}.html")
         self.write_result()
+        print(self.dictname, self.dictroot)
 
     # Get words in the txt file
     def get_word(self, text_file:Path) -> list:
@@ -22,7 +23,11 @@ class auto_dict():
     def get_dict(self, csv_file:Path) -> tuple:
         with open(csv_file, "r") as df:
             reader = csv.DictReader(df)
-        return [row["dictname"] for row in reader], [row["dictroot"] for row in reader]
+            dictname, dictroot = [], []
+            for row in reader:
+                dictname.append(row["dictname"])
+                dictroot.append(row["dictroot"])
+        return dictname, dictroot
 
 
     # Assemble result
@@ -33,8 +38,7 @@ class auto_dict():
             rf.writelines(html_begin)
             for word in self.wordset:
                 rf.write(f"  <h1>{word}</h1>\n  <p>")
-                #TODO: write the hyperlink of dicts' result in the html.
-                for dictname, dictroot in zip(self.dictname, self.dictroot):
+                for dictname, dictroot in list(zip(self.dictname, self.dictroot)):
                     rf.write(f"<a href={dictroot+word}>{dictname}</a> ")
                 rf.write("</p>\n")
             html_end = ["  </body>\n", "</html>"]
