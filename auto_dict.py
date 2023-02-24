@@ -1,6 +1,7 @@
 from pathlib import Path
 import csv
 
+#TODO: html lang="jp"
 class auto_dict():
     def __init__(self, text_file:Path, WebDict_File:Path="EN_DefaultDict.csv") -> None:
         # text_file : txt file with target words which is split with "/n"
@@ -33,21 +34,28 @@ class auto_dict():
     def write_result(self) -> None:
         result_file = Path()
         with open(self.result_file, "w") as rf:
-            html_begin = ["<!DOCTYPE html>\n", "<html>\n", "  <head>\n", f"    <title>{self.result_file.stem}</title>\n", "  </head>\n", "  <body>\n"]
+            html_begin = ["<!DOCTYPE html>\n", "<html>\n", "  <head>\n", f"    <title>{self.result_file.stem}</title>\n", "    <meta charset='UTF-8'>","  </head>\n", "  <body>\n"]
             rf.writelines(html_begin)
             for word in self.wordset:
                 rf.write(f"  <h1>{word}</h1>\n  <p>")
                 for dictname, dictroot in list(zip(self.dictname, self.dictroot)):
-                    rf.write(f"<a href={dictroot+word}>{dictname}</a> ")
+                    rf.write(f"<a style='text-decoration: none' href={dictroot+word}>{dictname}&nbsp;&nbsp;&nbsp;</a>")
                 rf.write("</p>\n")
             html_end = ["  </body>\n", "</html>"]
             rf.writelines(html_end)
 
 if __name__ == "__main__":
     from sys import argv
+    import os
     try:
-        text_file, WebDict_File = Path(argv[1]), Path(argv[2])
-        Dictionary = auto_dict(text_file, WebDict_File)
+        text_file = Path(argv[1])
     except IndexError:
         print("Except a target txt file and a dictionary csv file")
         print("try: Python3 auto_dict.py <target txt> <dictionary csv>")
+        os._exit(1)
+
+    try:
+        WebDict_File = Path(argv[2])
+        Dictionary = auto_dict(text_file, WebDict_File)
+    except IndexError:
+        Dictionary = auto_dict(text_file)
