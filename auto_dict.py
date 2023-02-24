@@ -11,7 +11,6 @@ class auto_dict():
         self.dictname, self.dictroot = self.get_dict(WebDict_File)
         self.result_file = Path(f"{text_file.stem}.html")
         self.write_result()
-        print(self.dictname, self.dictroot)
 
     # Get words in the txt file
     def get_word(self, text_file:Path) -> list:
