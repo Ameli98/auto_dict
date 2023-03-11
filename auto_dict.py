@@ -32,7 +32,6 @@ class auto_dict():
 
     # Assemble result
     def write_result(self) -> None:
-        result_file = Path()
         with open(self.result_file, "w") as rf:
             html_begin = ["<!DOCTYPE html>\n", "<html>\n", "  <head>\n", f"    <title>{self.result_file.stem}</title>\n", "    <meta charset='UTF-8'>","  </head>\n", "  <body>\n"]
             rf.writelines(html_begin)
@@ -47,6 +46,7 @@ class auto_dict():
 if __name__ == "__main__":
     from sys import argv
     import os
+    import webbrowser
     try:
         text_file = Path(argv[1])
     except IndexError:
@@ -59,3 +59,6 @@ if __name__ == "__main__":
         Dictionary = auto_dict(text_file, WebDict_File)
     except IndexError:
         Dictionary = auto_dict(text_file)
+        
+    html_File = Path(f"{text_file.stem}.html").resolve()
+    webbrowser.open("file:" + str(html_File))
